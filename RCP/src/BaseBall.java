@@ -73,6 +73,7 @@ public class BaseBall {
 
 	private int chanceOfStats() { // Combines the scaled batting avg and Era numbers and w
 		int chance = chanceOfBatAvg - chanceOfEra;
+		chance *= 4;
 		return chance;
 	}
 
