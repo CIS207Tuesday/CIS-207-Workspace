@@ -85,6 +85,11 @@ public class BaseBall {
 
 		return chance;
 	}
+	
+	public boolean hitsBall() {
+		int chanceOfMiss = 100 - chanceOfSwing();
+		return (1 + random.nextInt(99)) > chanceOfMiss;
+	}
 
 	public void selectTeam() {
 		System.out.println("Select team (1 or 2)");
@@ -112,6 +117,7 @@ public class BaseBall {
 			System.out.println("Chance of pos is: " + chanceOfPos());
 			System.out.println("Chance of stat is: " + chanceOfStats());
 			System.out.println("Chance of Swing is: " + chanceOfSwing());
+			System.out.println("Batter hit the ball: " + hitsBall());
 		}
 	}
 
