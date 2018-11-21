@@ -1,3 +1,4 @@
+
 import java.security.SecureRandom;
 import java.util.Scanner;
 
@@ -10,19 +11,21 @@ public class BaseBall {
 
 	// Creates objects from the 'players' constructor class
 	private static Players Betts = new Players("Betts", .346);
-	    private static Players Martinez = new Players("Martinez", .330);
-	    private static Players Benintendi = new Players("Benintendi", .290);
-	    private static Players Bogaerts = new Players("Bogaerts", .288);
-	    private static Players Price = new Players("Price", 3.58, "p");
-	    private static Players Barnes = new Players("Barnes", 1.04, "p");
-	    private static Players Frank = new Players("Frank", .198);
-	    private static Players George = new Players("George", .278);
-	    private static Players Henry = new Players("Henry", .323);
-	    private static Players Lary = new Players("Lary", .212);
-	    private static Players Greg = new Players("Greg", 5.2, "p");
+	private static Players Martinez = new Players("Martinez", .330);
+	private static Players Benintendi = new Players("Benintendi", .290);
+	private static Players Bogaerts = new Players("Bogaerts", .288);
+	private static Players Price = new Players("Price", 3.58, "p");
+	private static Players Barnes = new Players("Barnes", 1.04, "p");
+	private static Players Frank = new Players("Frank", .198);
+	private static Players George = new Players("George", .278);
+	private static Players Henry = new Players("Henry", .323);
+	private static Players Lary = new Players("Lary", .212);
+	private static Players Greg = new Players("Greg", 5.2, "p");
 
-		static Players BostonRedSox[] = { Betts, Martinez, Benintendi, Bogaerts, Price, Barnes }; // Takes those objects and puts them in arrays to
-																	// add them to a team
+	static Players BostonRedSox[] = { Betts, Martinez, Benintendi, Bogaerts, Price, Barnes }; // Takes those objects and
+																								// puts them in arrays
+																								// to
+	// add them to a team
 	static Players team2[] = { Frank, George, Henry, Lary, Greg };
 
 	static Players userTeam[]; // After the user selects a team array, that array will be stored there
@@ -86,7 +89,7 @@ public class BaseBall {
 
 		return chance;
 	}
-	
+
 	public boolean hitsBall() {
 		int chanceOfMiss = 100 - chanceOfSwing();
 		return (1 + random.nextInt(99)) > chanceOfMiss;
@@ -96,7 +99,7 @@ public class BaseBall {
 		System.out.println("Select team (1 or 2)");
 		int sel = input.nextInt();
 		if (sel == 1) { // Sets the userTeam array to whatever team they select
-			userTeam = team1;
+			userTeam = BostonRedSox;
 			compTeam = team2;
 		}
 
@@ -222,7 +225,7 @@ public class BaseBall {
 
 	public void setChanceOfBat(double battingAvg) {
 		int chanceOfBat = 0;
-		
+
 		if (battingAvg >= .100 && battingAvg <= .149) {
 			chanceOfBat = 5;
 		} else if (battingAvg >= .150 && battingAvg <= .199) {
@@ -237,7 +240,7 @@ public class BaseBall {
 
 	public void setChanceOfPitch(double era) {
 		int chanceOfPitch = 0;
-		
+
 		if (era == 1 && era <= 1.9) {
 			chanceOfPitch = 8;
 		} else if (era >= 2 && era <= 2.9) {
@@ -249,4 +252,15 @@ public class BaseBall {
 		}
 		this.chanceOfEra = chanceOfPitch;
 	}
-}
+}©2018 GitHub,Inc.Terms Privacy Security Status Help
+
+Contact GitHub
+Pricing
+API
+Training Blog
+About
+Press
+h to
+open a
+hovercard with
+more details.
