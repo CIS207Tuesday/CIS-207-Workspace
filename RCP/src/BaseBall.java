@@ -21,7 +21,7 @@ public class BaseBall {
 	    private static Players Lary = new Players("Lary", .212);
 	    private static Players Greg = new Players("Greg", 5.2, "p");
 
-		static Players team1[] = { Betts, Martinez, Benintendi, Bogaerts, Price, Barnes }; // Takes those objects and puts them in arrays to
+		static Players BostonRedSox[] = { Betts, Martinez, Benintendi, Bogaerts, Price, Barnes }; // Takes those objects and puts them in arrays to
 																	// add them to a team
 	static Players team2[] = { Frank, George, Henry, Lary, Greg };
 
