@@ -9,20 +9,23 @@ public class BaseBall {
 	private final int[][] strikeZone = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; // Represents a "strikeZone"
 
 	// Creates objects from the 'players' constructor class
-	private static Players Garry = new Players("Garry", .320);
-	private static Players Charlie = new Players("Charlie", .254);
-	private static Players David = new Players("David", .211);
-	private static Players John = new Players("John", .302);
-	private static Players Andy = new Players("Andy", 3.8, null);
-	private static Players Frank = new Players("Frank", .198);
-	private static Players George = new Players("George", .278);
-	private static Players Henry = new Players("Henry", .323);
-	private static Players Lary = new Players("Lary", .212);
-	private static Players Greg = new Players("Greg", 5.2, null);
+	private static Players Rendon = new Players("Rendon", .308);
+private static Players Kednrick = new Players("Kendrick", .303);
+private static Players Eaton = new Players("Eaton", .285);
+private static Players Murphy = new Players("Murphy", .293);
+private static Players Scherzer = new Players("Scherzer", 2.5, null);
+private static Players Andy = new Players("Grace", 2.8, null);
+private static Players Frank = new Players("Castellanos", .265);
+private static Players George = new Players("Iglesias", .278);
+private static Players Henry = new Players("Cabrera", .300);
+private static Players Hicks = new Players("Hicks", .260);
+private static Players Boyd = new Players("Boyd", 4.3, null);
+private static Players Wilson = new Players("Wilson", 3.9, null);
+	
 
-	static Players team1[] = { Garry, Charlie, David, John, Andy }; // Takes those objects and puts them in arrays to
-																	// add them to a team
-	static Players team2[] = { Frank, George, Henry, Lary, Greg };
+static Players Nationals[] = { Rendon, Kendrick, Eaton, Murphy, Scherzer, Grace  }; 
+																		
+static Players Tigers[] = { Castellanos, Iglesias, Cabrera, Hicks, Boyd, Wilson };
 
 	static Players userTeam[]; // After the user selects a team array, that array will be stored there
 	static Players compTeam[];
