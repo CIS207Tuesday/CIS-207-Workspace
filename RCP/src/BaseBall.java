@@ -9,6 +9,14 @@ public class BaseBall {
 	private final int[][] strikeZone = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; // Represents a "strikeZone"
 
 	// Creates objects from the 'players' constructor class
+	
+	
+	private static Players Betts = new Players("Betts", .346);
+	    private static Players Martinez = new Players("Martinez", .330);
+	    private static Players Benintendi = new Players("Benintendi", .290);
+	    private static Players Bogaerts = new Players("Bogaerts", .288);
+	    private static Players Price = new Players("Price", 3.58, "p");
+	    private static Players Barnes = new Players("Barnes", 1.04, "p");	
 	private static Players Rendon = new Players("Rendon", .308);
 private static Players Kednrick = new Players("Kendrick", .303);
 private static Players Eaton = new Players("Eaton", .285);
@@ -22,8 +30,10 @@ private static Players Hicks = new Players("Hicks", .260);
 private static Players Boyd = new Players("Boyd", 4.3, null);
 private static Players Wilson = new Players("Wilson", 3.9, null);
 	
+	static Players Red Sox[] = { Betts, Martinez, Benintendi, Bogaerts, Price, Barnes };
 
-static Players Nationals[] = { Rendon, Kendrick, Eaton, Murphy, Scherzer, Grace  }; 
+	
+	static Players Nationals[] = { Rendon, Kendrick, Eaton, Murphy, Scherzer, Grace  }; 
 																		
 static Players Tigers[] = { Castellanos, Iglesias, Cabrera, Hicks, Boyd, Wilson };
 
