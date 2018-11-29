@@ -10,11 +10,9 @@ public class Main {
 		TicTacToe ttt = new TicTacToe();
 		BaseBall baseBall = new BaseBall();
 		
-		System.out.println("Select which game you would like to play");
-		System.out.println("[1] Rock, Paper, Scissors\n[2] Tic-Tac-Toe\n[3] Baseball");
-		int selection = input.nextInt();
 
-		switch (selection) {
+		switch (getInputFromUser("Select which game you would like to play\n[1] Rock, Paper,"
+				+ " Scissors\n[2] Tic-Tac-Toe\n[3] Baseball\"", 1, 3)) {
 		case 1:
 			rps.mainRps();
 			break;
@@ -34,12 +32,15 @@ public class Main {
 		} catch (InputMismatchException e) {
 			System.out.println("Please enter a number as your input!");	
 			input.next();
-			return getInputFromUser(message, min, max);
+			userNumber = getInputFromUser (message, min, max);
+			return userNumber;
 		}
 		if (userNumber >= min && userNumber <= max) {
+			
 			return userNumber;
 		}
 		System.out.println("No such option exists.");
+		
 		return getInputFromUser(message, min, max);
-	}
+	} 
 }
