@@ -1,13 +1,13 @@
-
 import java.security.SecureRandom;
 import java.util.Scanner;
 
-public class BaseBall {
+public class Baseball {
 
 	private static Scanner input = new Scanner(System.in);
-	private static SecureRandom random = new SecureRandom();
+	protected static SecureRandom random = new SecureRandom();
 
-	private final int[][] strikeZone = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; // Represents a "strikeZone"
+	static final int[][] strikeZone = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; // Represents a "strikeZone"
+	protected static String[][] strikeZoneAfterBat = { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
 
 	// Creates objects from the 'players' constructor class
 	private static Players Betts = new Players("Betts", .346);
@@ -16,17 +16,24 @@ public class BaseBall {
 	private static Players Bogaerts = new Players("Bogaerts", .288);
 	private static Players Price = new Players("Price", 3.58, "p");
 	private static Players Barnes = new Players("Barnes", 1.04, "p");
-	private static Players Frank = new Players("Frank", .198);
-	private static Players George = new Players("George", .278);
-	private static Players Henry = new Players("Henry", .323);
-	private static Players Lary = new Players("Lary", .212);
-	private static Players Greg = new Players("Greg", 5.2, "p");
+	private static Players Rendon = new Players("Rendon", .308);
+	private static Players Kendrick = new Players("Kendrick", .303);
+	private static Players Eaton = new Players("Eaton", .285);
+	private static Players Murphy = new Players("Murphy", .293);
+	private static Players Scherzer = new Players("Scherzer", 2.5, null);
+	private static Players Grace = new Players("Grace", 2.8, null);
+	private static Players Castellanos = new Players("Castellanos", .265);
+	private static Players Iglesias = new Players("Iglesias", .278);
+	private static Players Cabrera = new Players("Cabrera", .300);
+	private static Players Hicks = new Players("Hicks", .260);
+	private static Players Boyd = new Players("Boyd", 4.3, null);
+	private static Players Wilson = new Players("Wilson", 3.9, null);
 
-	static Players BostonRedSox[] = { Betts, Martinez, Benintendi, Bogaerts, Price, Barnes }; // Takes those objects and
+	static Players BostonRedSox[] = { Betts, Martinez, Benintendi, Bogaerts, Price, Barnes };// Takes those objects and
 																								// puts them in arrays
-																								// to
-	// add them to a team
-	static Players team2[] = { Frank, George, Henry, Lary, Greg };
+
+	static Players WashingtonNationals[] = { Rendon, Kendrick, Eaton, Murphy, Scherzer, Grace };
+	static Players DetroitTigers[] = { Castellanos, Iglesias, Cabrera, Hicks, Boyd, Wilson };
 
 	static Players userTeam[]; // After the user selects a team array, that array will be stored there
 	static Players compTeam[];
@@ -34,233 +41,206 @@ public class BaseBall {
 	Players upToBat; // Stores a 'Players' object when that object is up to bat / pitch
 	Players upToPitch;
 
-	private enum pos {
+	enum POSITION {
 		first, middle, third // Enum to allow for the pitch/strike location in the strike zone to be stored
 								// by row & column
 	};
 
-	private static pos batterRow; // Holds location for which row the batter swung
-	private static pos batterCol; // Holds location for which column the pitcher pitched
-	private static pos pitcherRow;
-	private static pos pitcherCol;
+	protected static POSITION batterRow; // Holds location for which row the batter swung
+	protected static POSITION batterCol; // Holds location for which column the pitcher pitched
+	protected static POSITION pitcherRow;
+	protected static POSITION pitcherCol;
+
+	protected static HitBallEvents firstBase = new HitBallEvents(true);
+	protected static HitBallEvents secondBase = new HitBallEvents(false);
+	protected static HitBallEvents thirdBase = new HitBallEvents(false);
+
+	protected static boolean hitsBall;
 
 	private int chanceOfBatAvg; // Holds the value for how well the batter's/ pitcher's batting avg/era is
-	private int chanceOfEra;
+	protected int chanceOfEra;
 
 	private int chanceOfPos() { // This method is a scale that returns a value determined by a scale which
 								// measures the location of where the pitcher pitched and batter swung
 		int chance = 0;
 
-		if (batterRow == pitcherRow) {
-			chance = 80;
-		} else if (batterRow == pos.middle && (pitcherRow == pos.first || pitcherRow == pos.third)) {
-			chance = 40;
-		} else if (pitcherRow == pos.middle && (batterRow == pos.first || batterRow == pos.third)) {
-			chance = 40;
-		} else if ((batterRow != pitcherRow) && (batterRow != pos.middle && pitcherRow != pos.middle)) {
-			chance = 0;
-		}
+		if (doesSwing == true) {
+			if (batterRow == pitcherRow) {
+				chance = 100;
+			} else if (batterRow == POSITION.middle && (pitcherRow == POSITION.first || pitcherRow == POSITION.third)) {
+				chance = 40;
+			} else if (pitcherRow == POSITION.middle && (batterRow == POSITION.first || batterRow == POSITION.third)) {
+				chance = 40;
+			} else if ((batterRow != pitcherRow) && (batterRow != POSITION.middle && pitcherRow != POSITION.middle)) {
+				chance = 0;
+			}
 
-		if (chance > 0) {
-			if (batterCol == pitcherCol) {
-				chance += 10;
-			} else if (batterCol == pos.middle && (pitcherCol == pos.first || pitcherCol == pos.third)) {
+			if (chance > 0) {
+				if (batterCol == pitcherCol) {
+					chance += 10;
+				} else if (batterCol == POSITION.middle
+						&& (pitcherCol == POSITION.first || pitcherCol == POSITION.third)) {
 
-			} else if ((batterCol != pitcherCol) && (batterCol != pos.middle && pitcherCol != pos.middle)) {
+				} else if ((batterCol != pitcherCol)
+						&& (batterCol != POSITION.middle && pitcherCol != POSITION.middle)) {
+					chance -= 10;
+				}
+			}
+			if (foul == true) {
 				chance -= 10;
 			}
 		}
-
 		return chance;
 	}
 
 	private int chanceOfStats() { // Combines the scaled batting avg and Era numbers and w
 		int chance = chanceOfBatAvg - chanceOfEra;
-		chance *= 4;
 		return chance;
 	}
 
 	private int chanceOfSwing() { // Determines the chance of the batter hitting the ball
 		int chance = 0;
 		if (chanceOfPos() > 0) {
-
 			chance = chanceOfPos() + chanceOfStats();
 		}
-
 		return chance;
 	}
 
-	public boolean hitsBall() {
-		int chanceOfMiss = 100 - chanceOfSwing();
-		return (1 + random.nextInt(99)) > chanceOfMiss;
+	public void setHitsBall() {
+		int hitsBall = 1 + random.nextInt(100);
+
+		if (hitsBall <= chanceOfSwing())
+			Baseball.hitsBall = true;
+		else {
+			Baseball.hitsBall = false;
+		}
+
+		if (chanceOfSwing() == 0)
+			Baseball.hitsBall = false;
 	}
 
-	public void selectTeam() {
-		System.out.println("Select team (1 or 2)");
-		int sel = input.nextInt();
-		if (sel == 1) { // Sets the userTeam array to whatever team they select
-			userTeam = BostonRedSox;
-			compTeam = team2;
+	private static String userTeamName;
+	private static String compTeamName;
+
+	public void selectTeam(boolean isUser) {
+		do {
+		Players[] team = null;
+		String name = null;
+		int select = 0;
+		if (isUser == true)
+			select = SelectGame.getInputFromUser(
+					"Select team \n[1] Detroit Tigers \n[2] Washington Nationals\n[3] Boston Red Sox", 1, 3);
+		else {
+			select = 1 + random.nextInt(3);
 		}
 
-		else {
-			userTeam = team2;
-			compTeam = team1;
+		switch (select) {
+		case 1:
+			team = DetroitTigers;
+			name = "Detroit Tigers";
+			break;
+		case 2:
+			team = WashingtonNationals;
+			name = "Washington Nationals";
+			break;
+		case 3:
+			team = BostonRedSox;
+			name = "Boston Red Sox";
+			break;
 		}
+
+		if (isUser == true) {
+			userTeam = team;
+			userTeamName = name;
+		} else {
+			compTeam = team;
+			compTeamName = name;
+		}
+		} while(userTeam == compTeam);
+		
+	}
+
+	public void playGame() {
+		BaseballInputs bbInput = new BaseballInputs();
+		HitBallEvents events = new HitBallEvents();
 		int x = 0;
+		selectTeam(true);
+		selectTeam(false);
+		System.out.printf("The user selected the %s%nThe computer selected the %s%n%n", userTeamName, compTeamName);
+
+		boolean isUser = false;
+
 		while (x == 0) {
-			upToBat = userTeam[random.nextInt(userTeam.length - 1)];
-			upToPitch = compTeam[4];
-			System.out.println();
-			System.out.println(upToBat.getName() + " batting avg is: " + upToBat.getAvg());
-			System.out.println(upToPitch.getName() + " era is: " + upToPitch.getEra());
-			pitchInput(true);
-			batInput(true);
-			setChanceOfBat(upToBat.getAvg());
-			setChanceOfPitch(upToPitch.getEra());
-			System.out.println("Chance of pos is: " + chanceOfPos());
-			System.out.println("Chance of stat is: " + chanceOfStats());
-			System.out.println("Chance of Swing is: " + chanceOfSwing());
-			System.out.println("Batter hit the ball: " + hitsBall());
+
+			strikeCounter = 0;
+			foulCounter = 0;
+
+			while (strikeCounter < 3 && foulCounter < 4) {
+				bbInput.pitchInput(isUser);
+				printStrikeZone();
+				pitchSwingResults(false);
+				if (hitsBall == true)
+					events.moveBases();
+				resetAfterBat();
+			}
+
+			if (strikeCounter == 3) {
+				outCounter++;
+			}
+
+			if (isUser == true) {
+				isUser = false;
+			} else {
+				isUser = true;
+			}
 		}
+	}
+
+	public void pitchSwingResults(boolean devOptions) {
+		setHitsBall();
+		if (devOptions == true) {
+			System.out.printf("%nChance of Pos: %d%nChance of Stats: %d%nChance of Swing: %d%nHits ball: %b%n",
+					chanceOfPos(), chanceOfStats(), chanceOfSwing(), hitsBall);
+		}
+
+		if (hitsBall == true) {
+			System.out.println("Batter hit ball");
+		} else if (hitsBall == false && doesSwing == true) {
+			System.out.println("Batter missed");
+			strikeCounter++;
+		} else if (foul == true) {
+			System.out.println("Pitcher threw a foul.");
+			foulCounter++;
+		}
+
+		System.out.printf("%nStrikes: %d%nFouls: %d%n%n%n", strikeCounter, foulCounter);
+
 	}
 
 	public void printStrikeZone() {
-		for (int rows = 0; rows < strikeZone.length; rows++) {
-			for (int columns = 0; columns < strikeZone[rows].length; columns++) {
-				System.out.print("[" + strikeZone[rows][columns] + "]");
+		for (int rows = 0; rows < strikeZoneAfterBat.length; rows++) {
+			for (int columns = 0; columns < strikeZoneAfterBat[rows].length; columns++) {
+				System.out.print("[" + strikeZoneAfterBat[rows][columns] + "]");
 			}
 			System.out.println();
 		}
 	}
 
-	public void batInput(boolean isUser) {
-		int batInput = 0;
-
-		printStrikeZone();
-
-		if (isUser == true) {
-			int x = 0;
-			do {
-				System.out.println("Enter the number of where you would like to swing");
-				batInput = input.nextInt();
-				if (batInput < 1 && batInput > 9) {
-					System.out.println("Incorrect input");
-					x = 1;
-				}
-			} while (x > 1);
-		}
-		convertToEnum(batInput, true);
+	public void resetAfterBat() {
+		strikeZoneAfterBat[0][0] = "1";
+		strikeZoneAfterBat[0][1] = "2";
+		strikeZoneAfterBat[0][2] = "3";
+		strikeZoneAfterBat[1][0] = "4";
+		strikeZoneAfterBat[1][1] = "5";
+		strikeZoneAfterBat[1][2] = "6";
+		strikeZoneAfterBat[2][0] = "7";
+		strikeZoneAfterBat[2][1] = "8";
+		strikeZoneAfterBat[2][2] = "9";
 	}
 
-	public void pitchInput(boolean isUser) {
-		int pitchInput = 0;
-
-		printStrikeZone();
-
-		if (isUser == true) {
-			int x = 0;
-			do {
-				System.out.println("Enter the number of where you would like to pitch");
-				pitchInput = input.nextInt();
-				if (pitchInput < 1 && pitchInput > 9) {
-					System.out.println("Incorrect input");
-					x = 1;
-				}
-			} while (x > 1);
-		}
-		convertToEnum(pitchInput, false);
-	}
-
-	public void convertToEnum(int proInput, boolean isBatter) {
-		pos playerInputRow = null;
-		pos playerInputCol = null;
-		switch (proInput) {
-		case 1:
-			playerInputRow = pos.first;
-			playerInputCol = pos.first;
-			break;
-		case 2:
-			playerInputRow = pos.first;
-			playerInputCol = pos.middle;
-			break;
-		case 3:
-			playerInputRow = pos.first;
-			playerInputCol = pos.third;
-			break;
-		case 4:
-			playerInputRow = pos.middle;
-			playerInputCol = pos.first;
-			break;
-		case 5:
-			playerInputRow = pos.middle;
-			playerInputCol = pos.middle;
-			break;
-		case 6:
-			playerInputRow = pos.middle;
-			playerInputCol = pos.third;
-			break;
-		case 7:
-			playerInputRow = pos.third;
-			playerInputCol = pos.first;
-			break;
-		case 8:
-			playerInputRow = pos.third;
-			playerInputCol = pos.middle;
-			break;
-		case 9:
-			playerInputRow = pos.third;
-			playerInputCol = pos.third;
-			break;
-		}
-
-		if (isBatter == true) {
-			batterRow = playerInputRow;
-			batterCol = playerInputCol;
-		} else {
-			pitcherRow = playerInputRow;
-			pitcherCol = playerInputCol;
-		}
-	}
-
-	public void setChanceOfBat(double battingAvg) {
-		int chanceOfBat = 0;
-
-		if (battingAvg >= .100 && battingAvg <= .149) {
-			chanceOfBat = 5;
-		} else if (battingAvg >= .150 && battingAvg <= .199) {
-			chanceOfBat = 6;
-		} else if (battingAvg >= .200 && battingAvg <= .249) {
-			chanceOfBat = 7;
-		} else if (battingAvg >= .300) {
-			chanceOfBat = 8;
-		}
-		this.chanceOfBatAvg = chanceOfBat;
-	}
-
-	public void setChanceOfPitch(double era) {
-		int chanceOfPitch = 0;
-
-		if (era == 1 && era <= 1.9) {
-			chanceOfPitch = 8;
-		} else if (era >= 2 && era <= 2.9) {
-			chanceOfPitch = 7;
-		} else if (era >= 3 && era <= 3.9) {
-			chanceOfPitch = 6;
-		} else if (era >= 4 && era < 6) {
-			chanceOfPitch = 5;
-		}
-		this.chanceOfEra = chanceOfPitch;
-	}
-}©2018 GitHub,Inc.Terms Privacy Security Status Help
-
-Contact GitHub
-Pricing
-API
-Training Blog
-About
-Press
-h to
-open a
-hovercard with
-more details.
+	public static boolean doesSwing;
+	public static boolean foul;
+	public static int foulCounter;
+	public static int strikeCounter;
+	public static int outCounter;
+}
