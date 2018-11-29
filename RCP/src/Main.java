@@ -4,11 +4,13 @@ import java.util.Scanner;
 public class Main {
 
 	static Scanner input = new Scanner(System.in);
-
+	
 	public static void main(String[] args) {
 		Rps rps = new Rps();
 		TicTacToe ttt = new TicTacToe();
 		BaseBall baseBall = new BaseBall();
+		boolean runProgram = true;
+		while (runProgram == true) {
 		int selection = getInputFromUser("Select which game you would like to play\n[1] Rock, Paper,"
 				+ " Scissors\n[2] Tic-Tac-Toe\n[3] Baseball\n[4] Quit\n", 1, 4);
 
@@ -24,7 +26,8 @@ public class Main {
 			break;
 		case 4:
 			System.out.println("Thank you for using the Games Collection Application!");
-			System.exit(4);
+			runProgram = false;
+			}
 			
 			
 		}
