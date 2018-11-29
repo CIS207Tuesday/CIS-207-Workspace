@@ -1,7 +1,7 @@
 import java.security.SecureRandom;
-import java.util.Arrays;
+
 import java.util.Scanner;
-import java.util.stream.Stream;
+
 
 public class TicTacToe {
 
@@ -25,8 +25,8 @@ public class TicTacToe {
 
 	public void mainTicTacToe() {
 
-		System.out.println("Enter amount of players (1-2)?"); // Gets input for amount of players
-		int playerAmount = input.nextInt();
+		 // Gets input for amount of players
+		int playerAmount = Main.getInputFromUser("Enter amount of players (1-2)?", 1, 2);
 		boolean isUser = true;
 
 		if (playerAmount == 1) { // Determines if playing against another User or computer
@@ -40,7 +40,7 @@ public class TicTacToe {
 		System.out.println("\n Would player1 like to be X's or O's"); // Allows player1 to select wether they are X's or
 																		// O's
 		System.out.println("[1] X's\n[2] O's");
-		int charSelect = input.nextInt();
+		int charSelect = Main.getInputFromUser("\n Would player1 like to be X's or O's", 1, 2);
 
 		if (charSelect == 1) {
 			player1Char = "X ";
