@@ -9,10 +9,10 @@ public class Main {
 		Rps rps = new Rps();
 		TicTacToe ttt = new TicTacToe();
 		BaseBall baseBall = new BaseBall();
-		
+		int selection = getInputFromUser("Select which game you would like to play\n[1] Rock, Paper,"
+				+ " Scissors\n[2] Tic-Tac-Toe\n[3] Baseball\n[4] Quit\n", 1, 4);
 
-		switch (getInputFromUser("Select which game you would like to play\n[1] Rock, Paper,"
-				+ " Scissors\n[2] Tic-Tac-Toe\n[3] Baseball\"", 1, 3)) {
+		switch (selection) {
 		case 1:
 			rps.mainRps();
 			break;
@@ -21,6 +21,12 @@ public class Main {
 			break;
 		case 3:
 			baseBall.selectTeam();
+			break;
+		case 4:
+			System.out.println("Thank you for using the Games Collection Application!");
+			System.exit(4);
+			
+			
 		}
 	}
 
@@ -43,4 +49,5 @@ public class Main {
 		
 		return getInputFromUser(message, min, max);
 	} 
+
 }
