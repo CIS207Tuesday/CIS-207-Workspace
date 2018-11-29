@@ -59,14 +59,13 @@ public class Rps {
 			int playerSel;
 			int compSel;
 
-			System.out.println("\n\nSelect an option\n________________"); // Prints out RPC options menu
 			for (int counter = 0; counter < menu.length; counter++) {
 				System.out.printf("%n[%d] " + menu[counter], (counter + 1));
 			}
 
 			System.out.println();
-			playerSel = input.nextInt(); // holds value for user input
-			System.out.println();
+			playerSel = Main.getInputFromUser ("\n\nSelect an option\n________________", 1, 3);
+			//prints and tests RPC Options menu
 			convertToEnum(true, playerSel, playerName); // Converts user input to enum
 
 			System.out.println();
