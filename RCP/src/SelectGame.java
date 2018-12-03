@@ -1,7 +1,7 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Main {
+public class SelectGame {
 
 	static Scanner input = new Scanner(System.in);
 	
