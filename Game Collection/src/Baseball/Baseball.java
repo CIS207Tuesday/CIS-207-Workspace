@@ -68,7 +68,10 @@ public class Baseball {
 		int chance = 0;
 
 		if (doesSwing == true) {
-			if (getBatterRow() == pitcherRow) {
+
+			if ((batterRow == pitcherRow) && (batterCol == pitcherCol)) {
+				chance = 100;
+			} else if (getBatterRow() == pitcherRow) {
 				chance = 80;
 			} else if (getBatterRow() == POSITION.middle
 					&& (pitcherRow == POSITION.first || pitcherRow == POSITION.third)) {
@@ -81,7 +84,7 @@ public class Baseball {
 				chance = 0;
 			}
 
-			if (chance > 0) {
+			if (chance > 0 && chance < 100) {
 				if (batterCol == pitcherCol) {
 					chance += 10;
 				} else if (batterCol == POSITION.middle
@@ -192,18 +195,37 @@ public class Baseball {
 
 		int inningCounter = 1;
 		int printInnings = 0;
+		String inningHalf = null;
 
+		int maxInnings = SelectGame.getInputFromUser("How many innings would you like to play (1-9)?\n", 1, 9);
+		maxInnings *= 2;
+		System.out.println();
+		
 		while (x == 0) {
 
-			for (inningCounter = inningCounter; inningCounter <= 6;) {
+			for (inningCounter = inningCounter; inningCounter <= maxInnings;) {
 
-				String inningHalf;
 				if ((inningCounter % 2) == 0) {
 					inningHalf = "Bottom of";
 				} else {
 					printInnings++;
 					inningHalf = "Top of";
+
+					pitcherCounter++;
+					if (pitcherCounter > 5) {
+						pitcherCounter = 4;
+					}
 				}
+
+
+				if (isUserPitching == true) {
+					System.out.println(userTeamName + " is Pitching");
+					System.out.println(compTeamName + " is Batting");
+				} else {
+					System.out.println(compTeamName + " is Pitching");
+					System.out.println(userTeamName + " is Batting");
+				}
+				System.out.println();
 
 				do {
 
@@ -233,15 +255,22 @@ public class Baseball {
 					} while (events.getBase1() == upToBat || events.getBase2() == upToBat
 							|| events.getBase3() == upToBat);
 
-					System.out.printf("%n%s is up to bat.%n%s is up to pitch%n%n", upToBat.getName(),
-							upToPitch.getName());
+					System.out.printf("%n%s (BA: %.3f) is up to bat.%n%s (ERA: %.1f) is up to pitch%n%n",
+							upToBat.getName(), upToBat.getBattingAvg(), upToPitch.getName(), upToPitch.getEra());
 
 					while (strikeCounter < 3 && ballCounter < 4) {
 						bbInput.pitchInput(isUserPitching);
-						System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 						printStrikeZone();
 						setHitsBall();
+						
 						if (hitsBall == true) {
+							if (chanceOfPos() == 100) {
+								events.homeRun(isUserPitching);
+								strikeCounter = 0;
+								ballCounter = 0;
+								printResults(false, inningHalf, printInnings, isUserPitching);
+								break;
+							}
 							System.out.printf("%n%s hit the ball!%n", upToBat.getName());
 							events.hitsBall(isUserPitching);
 						}
@@ -250,19 +279,14 @@ public class Baseball {
 							events.setBatterChanged(false);
 							strikeCounter = 0;
 							ballCounter = 0;
-							printResults(false, inningHalf, printInnings);
+							printResults(false, inningHalf, printInnings, isUserPitching);
 							break;
 						}
-						printResults(false, inningHalf, printInnings);
+						printResults(false, inningHalf, printInnings, isUserPitching);
+				
 					}
-
-					if (strikeCounter == 3) {
-						outCounter++;
-						System.out.println("Strike out!");
-					} else if (ballCounter == 4) {
-						System.out.printf("%n%s walked %s!%n", upToPitch.getName(), upToBat.getName());
-						events.moveBases(true, isUserPitching);
-					}
+					
+					
 
 					batterCounter++;
 
@@ -276,14 +300,19 @@ public class Baseball {
 				} else if (isUserPitching == false) {
 					isUserPitching = true;
 				}
-				
+
 				inningCounter++;
+
+				if (userScoreCounter == compScoreCounter && inningCounter > maxInnings) {
+					maxInnings += 2;
+				}
 			}
-			
+			endGame();
+			x++;
 		}
 	}
 
-	public void printResults(boolean devOptions, String inningHalf, int innings) {
+	public void printResults(boolean devOptions, String inningHalf, int innings, boolean isUserPitching) {
 		if (devOptions == true) {
 			System.out.printf("%nChance of Pos: %d%nChance of Stats: %d%nChance of Swing: %d%nHits ball: %b%n",
 					chanceOfPos(), chanceOfStats(), chanceOfSwing(), hitsBall);
@@ -299,12 +328,29 @@ public class Baseball {
 			strikeCounter++;
 			System.out.printf("%n%s threw a strike. %nStrike %d!%n", upToPitch.getName(), strikeCounter);
 		}
+		
+		if (strikeCounter >= 3) {
+			outCounter++;
+			System.out.println("Strike out!");
+		} else if (ballCounter == 4) {
+			System.out.printf("%n%s walked %s!%n", upToPitch.getName(), upToBat.getName());
+			events.moveBases(true, isUserPitching);
+		}
 
 		events.printBases();
 		System.out.print(getInning(inningHalf, innings));
-		System.out.printf("%nStrikes: %d%nBalls: %d%nOuts: %d%n%n%s's Score: %d%n%s's Score: %d%n%n", strikeCounter,
+		System.out.printf("%n%nStrikes: %d%nBalls: %d%nOuts: %d%n%n%s's Score: %d%n%s's Score: %d%n", strikeCounter,
 				ballCounter, outCounter, userTeamName, userScoreCounter, compTeamName, compScoreCounter);
+		System.out.println("___________________________\n\n");
+	}
 
+	public void endGame() {
+		if (userScoreCounter > compScoreCounter) {
+			System.out.println(userTeamName + " Won!");
+		} else if (compScoreCounter > userScoreCounter) {
+			System.out.println(compTeamName + " Won");
+		}
+		System.out.println("\n\n\n");
 	}
 
 	public String getInning(String inningHalf, int inning) {
