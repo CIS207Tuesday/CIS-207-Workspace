@@ -21,34 +21,32 @@ public class BaseballEvents extends Baseball {
 		if (chanceOfFoulBall() == false) {
 			inAir(isUserPitching);
 			setIsOut();
-			
+
 			if (isOut == false) {
 				moveBases(true, isUserPitching);
-			} 
-			
+			}
+
 			else {
-				outCounter++;
 				if (currentPos == field.outField) {
-					System.out.printf("A player in the outfield caught the ball. %s is out%n", upToBat.getName());	
+					System.out.printf("A player in the outfield caught the ball. %n%s is out!%n", upToBat.getName());
 					moveBases(false, isUserPitching);
-				} 
-				
-				else if (currentPos == field.inField) {
-					System.out.printf("A player in the infield caught the ball and threw to first base.  %s is out%n", upToBat.getName());
-				}
-				
-				else if (currentPos == field.midField) {
+				} else if (currentPos == field.inField) {
+					System.out.printf(
+							"A player in the infield caught the ball and threw to first base.  %n%s is out!%n",
+							upToBat.getName());
+				} else if (currentPos == field.midField) {
 					String message;
 					int selectMessage = random.nextInt(2);
 
 					if (selectMessage == 0) {
 						message = "A player in the midfield caught the ball.";
 					} else {
-						message = "A player in the midfield picked up the ball and threw to first base";
+						message = "A player in the midfield picked up the ball and threw to first base.";
 					}
-					
-					System.out.printf(message + " %s is out%n", upToBat.getName());
+					System.out.printf(message + " %n%s is out!%n", upToBat.getName());
+
 				}
+				outCounter++;
 			}
 			setBatterChanged(true);
 		} else {
@@ -95,9 +93,7 @@ public class BaseballEvents extends Baseball {
 				moveBases(false, isUserPitching);
 			}
 		}
-
 		this.chanceOfOut = chanceOfOut;
-
 	}
 
 	public void catchBallInAir(int num1, int num2, int num3) {
@@ -118,7 +114,6 @@ public class BaseballEvents extends Baseball {
 		} else {
 			isOut = false;
 		}
-
 	}
 
 	private static String name1 = "Empty";
@@ -157,7 +152,6 @@ public class BaseballEvents extends Baseball {
 					compScoreCounter++;
 					System.out.println(compTeamName + " Scored!");
 				}
-
 			}
 			if (base2.getLoaded() == true) {
 				base3.setArgs(true, base2.getPlayerOnBase());
@@ -174,14 +168,50 @@ public class BaseballEvents extends Baseball {
 				name1 = base1.getPlayerOnBase().getName();
 				System.out.printf("%s ran to first base and is safe!%n", homePlate.getPlayerOnBase().getName());
 			}
-
-			// Add scoring
-
 		}
 
 		this.name1 = name1;
 		this.name2 = name2;
 		this.name3 = name3;
+
+	}
+
+	public void homeRun(boolean isUserPitching) {
+		System.out.printf("%n%s hit a homerun!%n", upToBat.getName());
+		homePlate.setArgs(true, upToBat);
+
+		int score = 0;
+
+		if (base3.getLoaded() == true) {
+			score++;
+			System.out.printf("%s Scored%n", base3.getPlayerOnBase().getName());
+		}
+
+		if (base2.getLoaded() == true) {
+			score++;
+			System.out.printf("%s Scored%n", base2.getPlayerOnBase().getName());
+
+		}
+
+		if (base1.getLoaded() == true) {
+			score++;
+			System.out.printf("%s Scored%n", base1.getPlayerOnBase().getName());
+
+		}
+
+		if (homePlate.getLoaded() == true) {
+			score++;
+			System.out.printf("%s Scored%n", homePlate.getPlayerOnBase().getName());
+
+		}
+
+		if (isUserPitching == false) {
+			userScoreCounter += score;
+		} else {
+			compScoreCounter += score;
+		}
+
+		resetBases();
 
 	}
 
